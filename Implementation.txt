@@ -1,0 +1,116 @@
+Implementation Plan - DreamSync Smart Planner
+DreamSync is a smart planner for students and working professionals to balance long-term goals (e.g., placements, competitive exams, coding) with college or work. It features goal management, task tracking, habit tracking, a smart daily schedule auto-generator, and progress analytics.
+
+User Review Required
+IMPORTANT
+
+Database fallback: We will configure the Django settings to support PostgreSQL by default (useful for production/user's preference) but fallback automatically to SQLite if environment variables or database connection fails. This ensures the application works immediately out-of-the-box.
+Authentication: We will use JWT (JSON Web Tokens) with standard cookies or localStorage. To make the Django-rendered frontend feel integrated, we will serve pages as standard Django views and use client-side JavaScript to inspect JWTs, handle authorization, and dynamically make API requests to Django REST Framework (DRF) endpoints.
+Open Questions
+NOTE
+
+Do you have a preferred PostgreSQL password or port already configured for the running service postgresql-x64-18? If not, we will configure the Django settings to read DB connection parameters from environment variables (e.g., DB_NAME, DB_USER, DB_PASSWORD, DB_HOST, DB_PORT) and fall back to a local SQLite database for seamless development.
+Should we pre-populate the database with some example goals and mock schedules during migrations, or let the dashboard start empty with a setup wizard? We suggest adding a database seed script or a "Seed Demo Data" button in the dashboard to make manual testing quick and beautiful.
+Proposed Changes
+We will create a Django project structure named dreamsync_project and a main app named planner.
+
+1. Backend: Django Project & Apps
+[NEW] 
+settings.py
+Setup Django configuration.
+Integrate rest_framework and rest_framework_simplejwt.
+Configure SQLite/PostgreSQL database selector.
+Configure static and template directory paths.
+[NEW] 
+models.py
+User: Custom User class inheriting from AbstractUser.
+Goal: Name, Target Date, Priority (High/Medium/Low), Daily Study Hours, Is Completed, Created At.
+Task: Title, Goal (nullable), Due Date, Status (Pending, In Progress, Completed), Priority, Created At.
+PlannerSettings: Wake Up Time, Sleep Time, College/Office Start Time, College/Office End Time, Free Hours (extra), Weekend Availability.
+ScheduleItem: Title, Start Time, End Time, Type (Sleep, Exercise, Work/College, Rest, Study, Revision, Other), Day of Week (or Is Weekend).
+Habit: Name, Category (Reading, Exercise, Coding, Water, Sleep, Meditation), Created At.
+HabitLog: Habit (FK), Date, Completed (Boolean), Value (Optional).
+[NEW] 
+serializers.py
+Define serializers for User (Registration), Goal, Task, PlannerSettings, ScheduleItem, Habit, and HabitLog.
+[NEW] 
+utils.py
+Smart Planner Algorithm: Algorithm to automatically partition a 24-hour day into a balanced schedule based on user's PlannerSettings and active goals.
+Generates Sleep block first.
+Fills Work/College timings next.
+Inserts Morning/Evening exercise and relaxation routines.
+Distributes Study hours and a dedicated Revision block from remaining free slots.
+[NEW] 
+views.py
+DRF API views for:
+Auth: Register, Login (Token Obtain), Refresh, User Profile.
+Goals: CRUD endpoints.
+Tasks: CRUD endpoints (with filters).
+Planner: Settings view + Auto-generate Schedule trigger.
+Habits: List, Create, Delete + Log completion.
+Analytics: Aggregated reports for completed tasks, habit streaks, daily and weekly study hours.
+Django HTML Template views for:
+Landing page (/)
+Login/Register page (/login/)
+Dashboard (/dashboard/)
+Goals (/goals/)
+Planner (/planner/)
+Habits (/habits/)
+Progress (/progress/)
+[NEW] 
+urls.py
+ and 
+urls.py
+Route REST API and page requests properly.
+2. Frontend: Modern, Responsive HTML/CSS/JS
+We will use standard Bootstrap 5, Custom Vanilla CSS for rich design accents (such as glassmorphism and subtle gradients), and Chart.js for visualization.
+
+[NEW] 
+style.css
+Implement a modern SaaS style system using HSL CSS variables.
+Colors: White, Indigo (#4F46E5), Purple (#7C3AED), Green accents.
+Soft rounded cards (border-radius: 1rem), smooth transitions, responsive tables.
+Dark Mode Support: Add a .dark-theme CSS layout toggling backgrounds to a dark navy/slate palette, and card backgrounds to deep charcoal.
+[NEW] 
+base.html
+Main HTML template with responsive navbar, sidebar/footer, dark mode toggle handler, and importing core styles and scripts.
+[NEW] 
+landing.html
+Hero section, student balancer illustration, feature details, interactive FAQ with accordion, testimonials, and footer.
+[NEW] 
+login.html
+Beautiful double-sided card for Login & Register using smooth JS transitions.
+[NEW] 
+dashboard.html
+Main user landing area: Today's Schedule timeline, Active Goals, Progress Circle, Upcoming Tasks list, Calendar, Daily Quote, and Action buttons.
+[NEW] 
+goals.html
+Manage active goals, list goals with priorities, add new goal modal.
+[NEW] 
+planner.html
+Configures timings (Wake-up, Sleep, Work) and shows the auto-generated calendar schedule visually.
+[NEW] 
+habits.html
+Tracker grid where users can check off habits for the week.
+[NEW] 
+progress.html
+Displays daily and weekly analytics using responsive Chart.js line and bar charts.
+[NEW] 
+auth.js
+Handle access/refresh tokens in localStorage.
+Auto-attach JWT in API authorization headers.
+Route protection (redirection to /login if token is missing).
+Verification Plan
+Automated Tests
+Write standard Django unit tests in planner/tests.py testing:
+User Registration & JWT Authentication endpoints.
+Smart Planner algorithm (verifying sleep, work, and study allocations don't overlap).
+Goal and Task CRUD operations.
+Run tests via:
+powershell
+
+python manage.py test
+Manual Verification
+Verify responsiveness on mobile, tablet, and desktop views.
+Test dark mode toggle on all pages, ensuring high-contrast legibility.
+Seed demo data to check Chart.js rendering on the Progress Page.

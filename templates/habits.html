@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}DreamSync - Habit Tracker{% endblock %}
+{% block page_header %}Habit Tracker{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+    <!-- Header info -->
+    <div class="col-12 d-flex justify-content-between align-items-center">
+        <div>
+            <p class="text-secondary mb-0">Build consistency. Click any daily box in the grid to log your habit completion.</p>
+        </div>
+        <button class="btn btn-primary-dreamsync" data-bs-toggle="modal" data-bs-target="#addHabitModal">
+            <i class="bi bi-plus-lg"></i> Add Custom Habit
+        </button>
+    </div>
+
+    <!-- Tracker Matrix Container -->
+    <div class="col-12">
+        <div class="card-dreamsync p-4">
+            <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
+                <h5 class="fw-bold mb-0">Weekly Check-off</h5>
+                <div class="d-flex gap-3 small text-secondary">
+                    <span><i class="bi bi-square-fill text-success"></i> Completed</span>
+                    <span><i class="bi bi-square border rounded" style="color: var(--border-color);"></i> Unlogged / Failed</span>
+                </div>
+            </div>
+
+            <!-- Headers for weekdays in matrix -->
+            <div class="row align-items-center mb-3 text-center d-none d-sm-flex" style="font-size: 0.85rem; font-weight: 700; color: var(--text-secondary);">
+                <div class="col-sm-4 text-start">Habit Name</div>
+                <div class="col-sm-8">
+                    <div class="row" id="matrix-days-header">
+                        <!-- Populated by JS (Last 7 days names) -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Habits Rows -->
+            <div id="habits-matrix-rows">
+                <!-- Dynamically populated habits with check boxes -->
+                <div class="text-center py-5 text-secondary">
+                    <div class="spinner-border text-primary mb-2" role="status"></div>
+                    <div>Loading habit matrix...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Habit Modal -->
+<div class="modal fade" id="addHabitModal" tabindex="-1" aria-labelledby="addHabitModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content card-dreamsync p-3 border-0">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title fw-bold" id="addHabitModalLabel">Create Custom Habit</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="create-habit-form">
+                <div class="modal-body border-0">
+                    <div class="mb-3">
+                        <label for="habit-name" class="form-label fw-semibold text-secondary">Habit Name</label>
+                        <input type="text" class="form-control form-control-dreamsync" id="habit-name" placeholder="e.g. Read 15 mins, Drink 3L water, Run 2km" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="habit-category" class="form-label fw-semibold text-secondary">Category Icon</label>
+                        <select class="form-select form-control-dreamsync" id="habit-category">
+                            <option value="READING" selected>Reading (Book)</option>
+                            <option value="EXERCISE">Exercise (Heart)</option>
+                            <option value="CODING">Coding (Terminal)</option>
+                            <option value="WATER">Water (Hydration)</option>
+                            <option value="SLEEP">Sleep (Moon)</option>
+                            <option value="MEDITATION">Meditation (Mindfulness)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 pt-0">
+                    <button type="button" class="btn btn-secondary-dreamsync" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary-dreamsync">Create Habit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/habits.js' %}"></script>
+{% endblock %}

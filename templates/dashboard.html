@@ -1,0 +1,167 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}DreamSync - Dashboard{% endblock %}
+{% block page_header %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+    <!-- Main Left Column -->
+    <div class="col-lg-8">
+        <!-- Welcome banner -->
+        <div class="card-dreamsync p-4 mb-4" style="background: linear-gradient(135deg, var(--primary-light) 0%, transparent 100%);">
+            <h2 class="fw-bold text-primary mb-1">Welcome back, <span id="welcome-username">User</span>!</h2>
+            <p class="text-secondary mb-0" id="today-date-string">Loading today's schedule...</p>
+        </div>
+
+        <!-- Weekly Calendar Bar -->
+        <div class="card-dreamsync p-3 mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="fw-bold mb-0 text-secondary"><i class="bi bi-calendar3"></i> This Week</h5>
+                <span class="badge bg-primary text-white" id="schedule-day-type">Weekday Mode</span>
+            </div>
+            <div class="row text-center g-2" id="week-calendar-row">
+                <!-- Will be dynamically populated with dates -->
+            </div>
+        </div>
+
+        <!-- Today's Schedule Timeline -->
+        <div class="card-dreamsync p-4 mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h5 class="fw-bold mb-0"><i class="bi bi-clock-history"></i> Today's Schedule</h5>
+                <button class="btn btn-sm btn-outline-primary" id="regenerate-schedule-btn">
+                    <i class="bi bi-arrow-repeat"></i> Regenerate
+                </button>
+            </div>
+            <div class="timeline-container" id="schedule-timeline">
+                <!-- Dynamically loaded timeline items -->
+                <div class="text-center py-4 text-secondary">
+                    <div class="spinner-border spinner-border-sm text-primary mb-2" role="status"></div>
+                    <div>Loading your schedule...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Upcoming Tasks -->
+        <div class="card-dreamsync p-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h5 class="fw-bold mb-0"><i class="bi bi-check-all text-success"></i> Key Tasks for Today</h5>
+                <button class="btn btn-sm btn-primary-dreamsync" data-bs-toggle="modal" data-bs-target="#addTaskModal">
+                    <i class="bi bi-plus-lg"></i> Add Task
+                </button>
+            </div>
+            <div class="list-group list-group-flush" id="tasks-list">
+                <!-- Dynamically loaded tasks -->
+                <div class="text-center py-4 text-secondary">
+                    <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Side Column -->
+    <div class="col-lg-4">
+        <!-- Progress Circular Widget -->
+        <div class="card-dreamsync p-4 mb-4 text-center">
+            <h5 class="fw-bold mb-3 text-start">Today's Progress</h5>
+            <div class="position-relative d-inline-block mx-auto my-3" style="width: 140px; height: 140px;">
+                <!-- Circular progress SVG -->
+                <svg width="140" height="140" viewBox="0 0 140 140">
+                    <circle cx="70" cy="70" r="58" stroke="var(--border-color)" stroke-width="10" fill="transparent" />
+                    <circle cx="70" cy="70" r="58" stroke="var(--primary)" stroke-width="10" fill="transparent" 
+                            stroke-dasharray="364.4" stroke-dashoffset="364.4" stroke-linecap="round" id="progress-circle"
+                            transform="rotate(-90 70 70)" style="transition: stroke-dashoffset 0.8s ease;" />
+                </svg>
+                <div class="position-absolute top-50 start-50 translate-middle">
+                    <h3 class="fw-bold mb-0" id="progress-percent-text">0%</h3>
+                    <small class="text-secondary" style="font-size: 0.75rem;">Done</small>
+                </div>
+            </div>
+            <p class="text-secondary small mt-2" id="progress-status-desc">Complete tasks & habits to build your daily streak!</p>
+        </div>
+
+        <!-- Current Primary Goal Widget -->
+        <div class="card-dreamsync p-4 mb-4" id="primary-goal-card">
+            <h5 class="fw-bold mb-3"><i class="bi bi-trophy text-warning"></i> Primary Goal</h5>
+            <div id="goal-widget-content">
+                <!-- Dynamically loaded primary goal -->
+                <div class="text-center py-2 text-secondary">
+                    <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions Menu -->
+        <div class="card-dreamsync p-4 mb-4">
+            <h5 class="fw-bold mb-3">Quick Actions</h5>
+            <div class="d-grid gap-2">
+                <button class="btn btn-secondary-dreamsync text-start" data-bs-toggle="modal" data-bs-target="#addTaskModal">
+                    <i class="bi bi-plus-circle text-primary me-2"></i> Add New Task
+                </button>
+                <a href="/goals/" class="btn btn-secondary-dreamsync text-start">
+                    <i class="bi bi-trophy text-warning me-2"></i> Add New Goal
+                </a>
+                <a href="/habits/" class="btn btn-secondary-dreamsync text-start">
+                    <i class="bi bi-check-square text-success me-2"></i> Log Daily Habits
+                </a>
+            </div>
+        </div>
+
+        <!-- Motivational Quote -->
+        <div class="card-dreamsync p-4 text-white" style="background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);">
+            <i class="bi bi-quote fs-1 opacity-50 lh-1 mb-2 d-block"></i>
+            <p class="lead fs-6 fst-italic mb-3" id="motivational-quote">"It is not that we have a short time to live, but that we waste a lot of it."</p>
+            <small class="opacity-75" id="motivational-author">- Seneca</small>
+        </div>
+    </div>
+</div>
+
+<!-- Add Task Modal -->
+<div class="modal fade" id="addTaskModal" tabindex="-1" aria-labelledby="addTaskModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content card-dreamsync p-3 border-0">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title fw-bold" id="addTaskModalLabel">Create New Task</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="create-task-form">
+                <div class="modal-body border-0">
+                    <div class="mb-3">
+                        <label for="task-title" class="form-label fw-semibold text-secondary">Task Title</label>
+                        <input type="text" class="form-control form-control-dreamsync" id="task-title" placeholder="e.g. Solve 5 problems on Arrays" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="task-goal" class="form-label fw-semibold text-secondary">Link to Goal (Optional)</label>
+                        <select class="form-select form-control-dreamsync" id="task-goal">
+                            <option value="">No goal (Independent task)</option>
+                            <!-- Dynamically loaded goals -->
+                        </select>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="task-date" class="form-label fw-semibold text-secondary">Due Date</label>
+                            <input type="date" class="form-control form-control-dreamsync" id="task-date" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="task-priority" class="form-label fw-semibold text-secondary">Priority</label>
+                            <select class="form-select form-control-dreamsync" id="task-priority">
+                                <option value="HIGH">High</option>
+                                <option value="MEDIUM" selected>Medium</option>
+                                <option value="LOW">Low</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 pt-0">
+                    <button type="button" class="btn btn-secondary-dreamsync" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary-dreamsync">Create Task</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/dashboard.js' %}"></script>
+{% endblock %}

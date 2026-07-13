@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}DreamSync - Progress & Analytics{% endblock %}
+{% block page_header %}Progress Analytics{% endblock %}
+
+{% block extra_head %}
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block content %}
+<!-- Metric Cards Row -->
+<div class="row g-3 mb-4">
+    <!-- Streak Card -->
+    <div class="col-sm-6 col-md-3">
+        <div class="card-dreamsync p-4 text-center">
+            <div class="fs-1 text-danger mb-2"><i class="bi bi-fire"></i></div>
+            <h6 class="fw-semibold text-secondary mb-1">Current Streak</h6>
+            <h2 class="fw-bold mb-0 text-primary" id="streak-counter">0 Days</h2>
+        </div>
+    </div>
+    <!-- Study Hours Card -->
+    <div class="col-sm-6 col-md-3">
+        <div class="card-dreamsync p-4 text-center">
+            <div class="fs-1 text-primary mb-2"><i class="bi bi-clock-history"></i></div>
+            <h6 class="fw-semibold text-secondary mb-1">Study Hours / Week</h6>
+            <h2 class="fw-bold mb-0 text-primary" id="weekly-hours-counter">0 hrs</h2>
+        </div>
+    </div>
+    <!-- Tasks Completed Card -->
+    <div class="col-sm-6 col-md-3">
+        <div class="card-dreamsync p-4 text-center">
+            <div class="fs-1 text-success mb-2"><i class="bi bi-check2-circle"></i></div>
+            <h6 class="fw-semibold text-secondary mb-1">Tasks Completed</h6>
+            <h2 class="fw-bold mb-0 text-primary" id="tasks-completed-counter">0 / 0</h2>
+        </div>
+    </div>
+    <!-- Goals Completed Card -->
+    <div class="col-sm-6 col-md-3">
+        <div class="card-dreamsync p-4 text-center">
+            <div class="fs-1 text-warning mb-2"><i class="bi bi-trophy-fill"></i></div>
+            <h6 class="fw-semibold text-secondary mb-1">Goals Achieved</h6>
+            <h2 class="fw-bold mb-0 text-primary" id="goals-completed-counter">0 / 0</h2>
+        </div>
+    </div>
+</div>
+
+<!-- Charts Section -->
+<div class="row g-4 mb-4">
+    <!-- Habits Line Chart -->
+    <div class="col-lg-6">
+        <div class="card-dreamsync p-4">
+            <h5 class="fw-bold mb-3"><i class="bi bi-graph-up text-primary"></i> Habit Consistency (%)</h5>
+            <div style="position: relative; height: 300px;">
+                <canvas id="habitsChart"></canvas>
+            </div>
+        </div>
+    </div>
+    <!-- Tasks Bar Chart -->
+    <div class="col-lg-6">
+        <div class="card-dreamsync p-4">
+            <h5 class="fw-bold mb-3"><i class="bi bi-bar-chart-fill text-success"></i> Tasks Completed / Day</h5>
+            <div style="position: relative; height: 300px;">
+                <canvas id="tasksChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Detailed Allocation Stats -->
+<div class="row g-4">
+    <div class="col-12">
+        <div class="card-dreamsync p-4">
+            <h5 class="fw-bold mb-3"><i class="bi bi-pie-chart text-secondary"></i> Study Hours Breakdown</h5>
+            <div class="row g-3">
+                <div class="col-md-6 border-end border-color pe-md-4">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="text-secondary fw-semibold">Weekday Study Target:</span>
+                        <span class="fw-bold text-primary" id="weekday-allocation-text">0 hrs/day</span>
+                    </div>
+                    <div class="progress rounded-pill mb-4" style="height: 8px; background-color: var(--bg-primary);">
+                        <div class="progress-bar rounded-pill" role="progressbar" style="width: 0%;" id="weekday-progress-bar"></div>
+                    </div>
+                    <p class="small text-secondary mb-0">Generated schedule guarantees this allocation by blocking hours outside work, sleep, and exercise routines.</p>
+                </div>
+                <div class="col-md-6 ps-md-4">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="text-secondary fw-semibold">Weekend Study Target:</span>
+                        <span class="fw-bold text-secondary" id="weekend-allocation-text">0 hrs/day</span>
+                    </div>
+                    <div class="progress rounded-pill mb-4" style="height: 8px; background-color: var(--bg-primary);">
+                        <div class="progress-bar bg-secondary rounded-pill" role="progressbar" style="width: 0%;" id="weekend-progress-bar"></div>
+                    </div>
+                    <p class="small text-secondary mb-0">Saturdays and Sundays have elevated study targets, auto-distributing goals across your free hours.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/progress.js' %}"></script>
+{% endblock %}

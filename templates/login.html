@@ -1,0 +1,261 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}DreamSync - Login / Register{% endblock %}
+
+{% block sidebar %}{% endblock %}
+{% block top_navbar %}{% endblock %}
+
+{% block extra_head %}
+<style>
+    .login-container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem 1rem;
+        background: radial-gradient(circle at 10% 10%, var(--primary-light) 0%, transparent 30%),
+                    radial-gradient(circle at 90% 90%, var(--secondary-light) 0%, transparent 35%);
+    }
+    .login-card {
+        width: 100%;
+        max-width: 480px;
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 1.25rem;
+        box-shadow: var(--card-shadow-hover);
+        overflow: hidden;
+    }
+    .auth-tab {
+        flex: 1;
+        text-align: center;
+        padding: 1.25rem;
+        font-weight: 700;
+        color: var(--text-secondary);
+        cursor: pointer;
+        border-bottom: 2px solid transparent;
+        transition: all 0.2s ease;
+    }
+    .auth-tab.active {
+        color: var(--primary);
+        border-bottom-color: var(--primary);
+        background-color: var(--primary-light);
+    }
+    .main-content {
+        margin-left: 0 !important;
+        padding: 0 !important;
+    }
+    .gradient-header {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        padding: 2.5rem 1.5rem;
+        color: white;
+        text-align: center;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="login-container">
+    <div class="login-card">
+        <!-- Brand Header -->
+        <div class="gradient-header">
+            <h2 class="fw-bold mb-1"><i class="bi bi-intersect"></i> DreamSync</h2>
+            <p class="mb-0 opacity-75">Balance Today. Achieve Tomorrow.</p>
+        </div>
+
+        <!-- Tabs -->
+        <div class="d-flex border-bottom border-color">
+            <div class="auth-tab active" id="tab-login-btn">Sign In</div>
+            <div class="auth-tab" id="tab-register-btn">Register</div>
+        </div>
+
+        <div class="p-4 p-sm-5">
+            <!-- Alert Banner -->
+            <div class="alert alert-danger d-none" id="auth-alert" role="alert">
+                Incorrect credentials. Please try again.
+            </div>
+            
+            <!-- Login Form -->
+            <form id="login-form">
+                <div class="mb-3">
+                    <label for="login-username" class="form-label fw-semibold text-secondary">Username</label>
+                    <input type="text" class="form-control form-control-dreamsync" id="login-username" placeholder="Enter username" required>
+                </div>
+                <div class="mb-4">
+                    <label for="login-password" class="form-label fw-semibold text-secondary">Password</label>
+                    <input type="password" class="form-control form-control-dreamsync" id="login-password" placeholder="Enter password" required>
+                </div>
+                <button type="submit" class="btn btn-primary-dreamsync w-100 py-3" id="login-submit-btn">
+                    Sign In <i class="bi bi-box-arrow-in-right ms-2"></i>
+                </button>
+            </form>
+
+            <!-- Register Form -->
+            <form id="register-form" class="d-none">
+                <div class="mb-3">
+                    <label for="register-username" class="form-label fw-semibold text-secondary">Username</label>
+                    <input type="text" class="form-control form-control-dreamsync" id="register-username" placeholder="Choose a username" required>
+                </div>
+                <div class="mb-3">
+                    <label for="register-email" class="form-label fw-semibold text-secondary">Email Address</label>
+                    <input type="email" class="form-control form-control-dreamsync" id="register-email" placeholder="name@example.com" required>
+                </div>
+                <div class="mb-3">
+                    <label for="register-password" class="form-label fw-semibold text-secondary">Password</label>
+                    <input type="password" class="form-control form-control-dreamsync" id="register-password" placeholder="Minimum 6 characters" required minlength="6">
+                </div>
+                <div class="mb-4">
+                    <label for="register-confirm" class="form-label fw-semibold text-secondary">Confirm Password</label>
+                    <input type="password" class="form-control form-control-dreamsync" id="register-confirm" placeholder="Repeat password" required minlength="6">
+                </div>
+                <button type="submit" class="btn btn-primary-dreamsync w-100 py-3" id="register-submit-btn">
+                    Create Account <i class="bi bi-person-plus ms-2"></i>
+                </button>
+            </form>
+            
+            <div class="text-center mt-4">
+                <a href="/" class="text-secondary small"><i class="bi bi-arrow-left"></i> Back to Home</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const tabLogin = document.getElementById('tab-login-btn');
+    const tabRegister = document.getElementById('tab-register-btn');
+    const loginForm = document.getElementById('login-form');
+    const registerForm = document.getElementById('register-form');
+    const authAlert = document.getElementById('auth-alert');
+
+    // Switch Tab Functions
+    function showLogin() {
+        tabLogin.classList.add('active');
+        tabRegister.classList.remove('active');
+        loginForm.classList.remove('d-none');
+        registerForm.classList.add('d-none');
+        authAlert.classList.add('d-none');
+    }
+
+    function showRegister() {
+        tabLogin.classList.remove('active');
+        tabRegister.classList.add('active');
+        loginForm.classList.add('d-none');
+        registerForm.classList.remove('d-none');
+        authAlert.classList.add('d-none');
+    }
+
+    tabLogin.addEventListener('click', showLogin);
+    tabRegister.addEventListener('click', showRegister);
+
+    // Auto-select tab based on URL param
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('register') === 'true') {
+        showRegister();
+    }
+
+    // Submit Login Form
+    loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        authAlert.classList.add('d-none');
+        
+        const username = document.getElementById('login-username').value;
+        const password = document.getElementById('login-password').value;
+
+        try {
+            const res = await fetch('/api/auth/token/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            });
+
+            if (res.ok) {
+                const data = await res.json();
+                setTokens(data.access, data.refresh);
+                window.location.href = '/dashboard/';
+            } else {
+                const data = await res.json();
+                authAlert.textContent = data.detail || 'Invalid username or password.';
+                authAlert.classList.remove('d-none');
+            }
+        } catch (err) {
+            authAlert.textContent = 'Server connection error. Please try again.';
+            authAlert.classList.remove('d-none');
+        }
+    });
+
+    // Submit Registration Form
+    registerForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        authAlert.classList.add('d-none');
+
+        const username = document.getElementById('register-username').value;
+        const email = document.getElementById('register-email').value;
+        const password = document.getElementById('register-password').value;
+        const confirm = document.getElementById('register-confirm').value;
+
+        if (password !== confirm) {
+            authAlert.textContent = 'Passwords do not match.';
+            authAlert.classList.remove('d-none');
+            return;
+        }
+
+        try {
+            // 1. Register User
+            const regRes = await fetch('/api/auth/register/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, email, password })
+            });
+
+            if (regRes.ok) {
+                // 2. Automatically log them in
+                const loginRes = await fetch('/api/auth/token/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+
+                if (loginRes.ok) {
+                    const data = await loginRes.json();
+                    setTokens(data.access, data.refresh);
+                    
+                    // Trigger initial schedule generation by sending a quick POST to regenerate
+                    await fetch('/api/planner/schedule/regenerate/', {
+                        method: 'POST',
+                        headers: { 
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${data.access}`
+                        }
+                    });
+
+                    window.location.href = '/dashboard/';
+                } else {
+                    showLogin();
+                    authAlert.textContent = 'Registration successful! Please sign in.';
+                    authAlert.classList.remove('alert-danger');
+                    authAlert.classList.add('alert-success');
+                    authAlert.classList.remove('d-none');
+                }
+            } else {
+                const data = await regRes.json();
+                // Map API field errors to text
+                let errorMsg = '';
+                for (const key in data) {
+                    errorMsg += `${key}: ${data[key].join(', ')} `;
+                }
+                authAlert.textContent = errorMsg || 'Registration failed. Check inputs.';
+                authAlert.classList.remove('alert-success');
+                authAlert.classList.add('alert-danger');
+                authAlert.classList.remove('d-none');
+            }
+        } catch (err) {
+            authAlert.textContent = 'Server connection error. Please try again.';
+            authAlert.classList.remove('d-none');
+        }
+    });
+});
+</script>
+{% endblock %}

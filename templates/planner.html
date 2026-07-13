@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}DreamSync - Smart Planner{% endblock %}
+{% block page_header %}Smart Scheduler{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+    <!-- Left Column: Timing Settings Form -->
+    <div class="col-lg-4">
+        <div class="card-dreamsync p-4 h-100">
+            <h5 class="fw-bold mb-3"><i class="bi bi-sliders text-primary"></i> Daily Timings</h5>
+            <p class="text-secondary small mb-4">Set your availability constraints. Our algorithm will rebuild your weekday and weekend routines around these hours.</p>
+            
+            <form id="planner-settings-form">
+                <div class="mb-3">
+                    <label for="wake-up" class="form-label fw-semibold text-secondary">Wake-up Time</label>
+                    <input type="time" class="form-control form-control-dreamsync" id="wake-up" required>
+                </div>
+                <div class="mb-3">
+                    <label for="sleep-time" class="form-label fw-semibold text-secondary">Sleep Time</label>
+                    <input type="time" class="form-control form-control-dreamsync" id="sleep-time" required>
+                </div>
+                <div class="mb-3">
+                    <label for="college-start" class="form-label fw-semibold text-secondary">Work/College Start</label>
+                    <input type="time" class="form-control form-control-dreamsync" id="college-start" required>
+                </div>
+                <div class="mb-3">
+                    <label for="college-end" class="form-label fw-semibold text-secondary">Work/College End</label>
+                    <input type="time" class="form-control form-control-dreamsync" id="college-end" required>
+                </div>
+                
+                <div class="row">
+                    <div class="col-6 mb-4">
+                        <label for="free-hours" class="form-label fw-semibold text-secondary" title="Weekday Study Hours">Weekday Study</label>
+                        <input type="number" class="form-control form-control-dreamsync" id="free-hours" min="1" max="10" required>
+                    </div>
+                    <div class="col-6 mb-4">
+                        <label for="weekend-hours" class="form-label fw-semibold text-secondary" title="Weekend Study Hours">Weekend Study</label>
+                        <input type="number" class="form-control form-control-dreamsync" id="weekend-hours" min="1" max="12" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary-dreamsync w-100 py-3" id="save-settings-btn">
+                    Save & Regenerate <i class="bi bi-arrow-repeat ms-2"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Right Column: Visual Generated Schedules -->
+    <div class="col-lg-8">
+        <div class="card-dreamsync p-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h5 class="fw-bold mb-0"><i class="bi bi-calendar-week"></i> Generated Routines</h5>
+                <!-- Nav tabs -->
+                <ul class="nav nav-pills gap-2 border-0" id="scheduleTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active btn btn-sm rounded-pill px-3 fw-bold" id="weekdays-tab" data-bs-toggle="tab" data-bs-target="#weekdays" type="button" role="tab" aria-controls="weekdays" aria-selected="true" style="border: 1px solid var(--border-color);">
+                            Weekdays (Mon-Fri)
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link btn btn-sm rounded-pill px-3 fw-bold" id="weekends-tab" data-bs-toggle="tab" data-bs-target="#weekends" type="button" role="tab" aria-controls="weekends" aria-selected="false" style="border: 1px solid var(--border-color);">
+                            Weekends (Sat-Sun)
+                        </button>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Tab content -->
+            <div class="tab-content">
+                <!-- Weekdays Panel -->
+                <div class="tab-pane fade show active" id="weekdays" role="tabpanel" aria-labelledby="weekdays-tab">
+                    <div class="timeline-container" id="weekday-timeline">
+                        <!-- Loaded dynamically -->
+                    </div>
+                </div>
+
+                <!-- Weekends Panel -->
+                <div class="tab-pane fade" id="weekends" role="tabpanel" aria-labelledby="weekends-tab">
+                    <div class="timeline-container" id="weekend-timeline">
+                        <!-- Loaded dynamically -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/planner.js' %}"></script>
+{% endblock %}

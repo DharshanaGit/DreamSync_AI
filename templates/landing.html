@@ -1,0 +1,310 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}DreamSync - Your Smart Study & Work Planner{% endblock %}
+
+{% block sidebar %}{% endblock %}
+{% block top_navbar %}{% endblock %}
+
+{% block extra_head %}
+<style>
+    /* Custom landing navbar to override sidebar space */
+    .landing-nav {
+        background-color: rgba(var(--bg-secondary), 0.8);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--border-color);
+        transition: all 0.3s ease;
+    }
+    .landing-body {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    .main-content {
+        margin-left: 0 !important;
+        padding: 0 !important;
+    }
+    .feature-card {
+        transition: all 0.3s ease;
+        border-radius: 1rem;
+        border: 1px solid var(--border-color);
+        background: var(--bg-secondary);
+    }
+    .feature-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--card-shadow-hover);
+        border-color: var(--primary);
+    }
+    .gradient-text {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-weight: 800;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="landing-body">
+    <!-- Navbar -->
+    <header class="navbar navbar-expand-md landing-nav fixed-top py-3 px-4">
+        <div class="container-xl">
+            <a class="navbar-brand fw-extrabold fs-3 gradient-text" href="/">
+                <i class="bi bi-intersect"></i> DreamSync
+            </a>
+            <div class="d-flex align-items-center gap-3">
+                <a href="/login/" class="btn btn-secondary-dreamsync py-2 px-3 fs-6">Sign In</a>
+                <a href="/login/?register=true" class="btn btn-primary-dreamsync py-2 px-3 fs-6">Get Started</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="landing-hero d-flex align-items-center">
+        <div class="container-xl">
+            <div class="row align-items-center g-5">
+                <div class="col-lg-6 text-center text-lg-start">
+                    <span class="badge bg-primary-light text-primary px-3 py-2 rounded-pill fw-bold mb-3">Goal-Oriented Daily Scheduler</span>
+                    <h1 class="display-4 fw-extrabold lh-sm mb-3 text-primary">
+                        Your Smart Study & <br><span class="gradient-text">Work Planner</span>
+                    </h1>
+                    <p class="lead text-secondary mb-4">
+                        Balance Today. Achieve Tomorrow. <br>
+                        DreamSync helps students and working professionals auto-generate balanced daily routines to achieve long-term goals (UPSC, Placements, GATE) without burning out.
+                    </p>
+                    <div class="d-flex flex-column flex-sm-row justify-content-center justify-content-lg-start gap-3">
+                        <a href="/login/?register=true" class="btn btn-primary-dreamsync btn-lg py-3 px-4 fs-6">
+                            Start Planning Free <i class="bi bi-arrow-right ms-2"></i>
+                        </a>
+                        <a href="#how-it-works" class="btn btn-secondary-dreamsync btn-lg py-3 px-4 fs-6">
+                            See How it Works
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-6 illustration-container">
+                    <!-- Beautiful Inline Vector SVG Balancer Illustration -->
+                    <svg viewBox="0 0 500 500" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Background glow elements -->
+                        <circle cx="250" cy="250" r="180" fill="var(--primary-light)" opacity="0.3" filter="blur(20px)" />
+                        <circle cx="350" cy="200" r="100" fill="var(--secondary-light)" opacity="0.4" filter="blur(30px)" />
+                        
+                        <!-- The Scale Base -->
+                        <path d="M 150 420 L 350 420 L 330 400 L 170 400 Z" fill="var(--text-secondary)" opacity="0.2" />
+                        <rect x="240" y="240" width="20" height="160" rx="10" fill="var(--text-secondary)" opacity="0.5" />
+                        
+                        <!-- Balance Bar -->
+                        <g id="scale-bar" transform="rotate(-5, 250, 240)">
+                            <line x1="80" y1="240" x2="420" y2="240" stroke="var(--text-primary)" stroke-width="8" stroke-linecap="round" />
+                            <circle cx="250" cy="240" r="12" fill="var(--primary)" />
+                            
+                            <!-- Left Plate (College/Work) -->
+                            <line x1="120" y1="240" x2="120" y2="320" stroke="var(--text-secondary)" stroke-width="2" />
+                            <line x1="120" y1="240" x2="80" y2="320" stroke="var(--text-secondary)" stroke-width="2" />
+                            <line x1="120" y1="240" x2="160" y2="320" stroke="var(--text-secondary)" stroke-width="2" />
+                            <path d="M 60 320 Q 120 335 180 320 Z" fill="var(--primary)" opacity="0.8" />
+                            <!-- Work Elements on Left Plate -->
+                            <rect x="85" y="270" width="70" height="45" rx="5" fill="var(--bg-secondary)" stroke="var(--border-color)" stroke-width="2" />
+                            <text x="120" y="295" font-family="sans-serif" font-size="10" font-weight="bold" fill="var(--text-primary)" text-anchor="middle">OFFICE/COLLEGE</text>
+                            <circle cx="120" cy="265" r="10" fill="var(--accent-green)" />
+                            <path d="M 117 265 L 119 267 L 123 263" stroke="white" stroke-width="2" stroke-linecap="round" fill="none" />
+                            
+                            <!-- Right Plate (Prep/Study Goals) -->
+                            <line x1="380" y1="240" x2="380" y2="320" stroke="var(--text-secondary)" stroke-width="2" />
+                            <line x1="380" y1="240" x2="340" y2="320" stroke="var(--text-secondary)" stroke-width="2" />
+                            <line x1="380" y1="240" x2="420" y2="320" stroke="var(--text-secondary)" stroke-width="2" />
+                            <path d="M 320 320 Q 380 335 440 320 Z" fill="var(--secondary)" opacity="0.8" />
+                            <!-- Study Elements on Right Plate -->
+                            <rect x="345" y="260" width="70" height="55" rx="5" fill="var(--bg-secondary)" stroke="var(--border-color)" stroke-width="2" />
+                            <text x="380" y="285" font-family="sans-serif" font-size="10" font-weight="bold" fill="var(--text-primary)" text-anchor="middle">UPSC / DRF</text>
+                            <text x="380" y="300" font-family="sans-serif" font-size="8" fill="var(--text-secondary)" text-anchor="middle">3.5 hrs / day</text>
+                            <polygon points="380,240 375,250 385,250" fill="var(--secondary)" />
+                        </g>
+                        
+                        <!-- Dynamic Clock Element floating in background -->
+                        <g transform="translate(400, 100)">
+                            <circle cx="0" cy="0" r="30" fill="var(--bg-secondary)" stroke="var(--border-color)" stroke-width="2" />
+                            <line x1="0" y1="0" x2="0" y2="-18" stroke="var(--primary)" stroke-width="3" stroke-linecap="round" />
+                            <line x1="0" y1="0" x2="12" y2="6" stroke="var(--text-primary)" stroke-width="2" stroke-linecap="round" />
+                            <circle cx="0" cy="0" r="3" fill="var(--text-primary)" />
+                        </g>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="py-5" id="features">
+        <div class="container-xl py-4">
+            <div class="text-center max-w-lg mx-auto mb-5">
+                <h2 class="h1 fw-bold text-primary mb-2">Designed for High Performers</h2>
+                <p class="text-secondary lead fs-6">Packed with essential productivity tools to keep you structured daily.</p>
+            </div>
+            <div class="row g-4">
+                <!-- Feature 1 -->
+                <div class="col-md-4">
+                    <div class="feature-card p-4 h-100">
+                        <div class="feature-icon">
+                            <i class="bi bi-calendar-range"></i>
+                        </div>
+                        <h3 class="h5 fw-bold mb-2">Smart Daily Planner</h3>
+                        <p class="text-secondary mb-0">Input your college, office, sleep, and wakeup timings. Our scheduler instantly designs a customized hourly breakdown separating study blocks from relaxation.</p>
+                    </div>
+                </div>
+                <!-- Feature 2 -->
+                <div class="col-md-4">
+                    <div class="feature-card p-4 h-100">
+                        <div class="feature-icon">
+                            <i class="bi bi-trophy"></i>
+                        </div>
+                        <h3 class="h5 fw-bold mb-2">Milestone Goals</h3>
+                        <p class="text-secondary mb-0">Track active priorities like GATE preparation, placement code review, or learning React. Allocate custom daily hours to balance individual goal weightage.</p>
+                    </div>
+                </div>
+                <!-- Feature 3 -->
+                <div class="col-md-4">
+                    <div class="feature-card p-4 h-100">
+                        <div class="feature-icon">
+                            <i class="bi bi-check-circle"></i>
+                        </div>
+                        <h3 class="h5 fw-bold mb-2">Atomic Habits</h3>
+                        <p class="text-secondary mb-0">Embed reading, meditation, coding, and hydration into your daily schedule. Verify your streak progress utilizing a clean checkbox habit tracker matrix.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="py-5 bg-light-theme-alt" id="how-it-works" style="background-color: var(--bg-primary);">
+        <div class="container-xl py-4">
+            <div class="text-center max-w-lg mx-auto mb-5">
+                <h2 class="h1 fw-bold text-primary mb-2">Simple 3-Step Success</h2>
+                <p class="text-secondary lead fs-6">How DreamSync gets you balanced in under five minutes.</p>
+            </div>
+            <div class="row g-4 justify-content-center text-center">
+                <div class="col-md-4">
+                    <div class="p-3">
+                        <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 3.5rem; height: 3.5rem; font-size: 1.5rem; font-weight: 700;">1</div>
+                        <h4 class="fw-bold text-primary">Define Your Goals</h4>
+                        <p class="text-secondary">Input your target objectives (e.g. UPSC Exam or Placement Preparation) alongside daily study requirements.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-3">
+                        <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 3.5rem; height: 3.5rem; font-size: 1.5rem; font-weight: 700;">2</div>
+                        <h4 class="fw-bold text-primary">Input Busy Hours</h4>
+                        <p class="text-secondary">Set your office, class, commute, sleep, and wakeup slots so the system knows when you are unavailable.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-3">
+                        <div class="rounded-circle bg-success text-white d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 3.5rem; height: 3.5rem; font-size: 1.5rem; font-weight: 700;">3</div>
+                        <h4 class="fw-bold text-primary">Get Your Routine</h4>
+                        <p class="text-secondary">Get a dynamically generated daily routine. Modify tasks and mark habits complete to capture data analytics.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="py-5" id="testimonials">
+        <div class="container-xl py-4">
+            <div class="text-center max-w-lg mx-auto mb-5">
+                <h2 class="h1 fw-bold text-primary mb-2">What Our Planners Say</h2>
+                <p class="text-secondary lead fs-6">Real stories from people balancing studies and employment.</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="card-dreamsync p-4 h-100">
+                        <p class="text-secondary fst-italic mb-3">"Balancing final year placement prep with college projects was extremely stressful. DreamSync automatically set aside 2 hours for coding right after my classes, helping me stay consistent without neglecting college."</p>
+                        <div class="d-flex align-items-center gap-3">
+                            <i class="bi bi-person-circle fs-2 text-primary"></i>
+                            <div>
+                                <h5 class="mb-0 fw-bold fs-6">Siddharth Sharma</h5>
+                                <small class="text-secondary">CSE Student, Secured Placement</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card-dreamsync p-4 h-100">
+                        <p class="text-secondary fst-italic mb-3">"As a software engineer preparing for UPSC civil services, time is my biggest constraint. DreamSync's weekend auto-scheduler helps me scale up to 6 study hours on Saturdays without thinking."</p>
+                        <div class="d-flex align-items-center gap-3">
+                            <i class="bi bi-person-circle fs-2 text-secondary"></i>
+                            <div>
+                                <h5 class="mb-0 fw-bold fs-6">Anjali Verma</h5>
+                                <small class="text-secondary">Backend Developer & Aspirant</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="py-5" id="faq" style="background-color: var(--bg-primary);">
+        <div class="container-xl py-4">
+            <div class="text-center max-w-lg mx-auto mb-5">
+                <h2 class="h1 fw-bold text-primary mb-2">Frequently Asked Questions</h2>
+                <p class="text-secondary lead fs-6">Got questions? We've got answers.</p>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="accordion" id="faqAccordion">
+                        <div class="accordion-item mb-3 border-0 rounded card-dreamsync p-1">
+                            <h2 class="accordion-header" id="headingOne">
+                                <button class="accordion-button collapsed bg-transparent text-primary fw-bold border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                    Can I customize the generated schedule?
+                                </button>
+                            </h2>
+                            <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body text-secondary">
+                                    Yes! The system generates a highly optimized template. You can adjust your wake-up, college, or sleep hours in the settings to automatically redistribute the tasks and study blocks.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item mb-3 border-0 rounded card-dreamsync p-1">
+                            <h2 class="accordion-header" id="headingTwo">
+                                <button class="accordion-button collapsed bg-transparent text-primary fw-bold border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                    How does the habit tracker integrate with my day?
+                                </button>
+                            </h2>
+                            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body text-secondary">
+                                    When you add habits, the system schedules general health blocks (e.g. Exercise or Meditation) based on available free spaces. You can check off completions directly in the weekly habit matrix.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item mb-3 border-0 rounded card-dreamsync p-1">
+                            <h2 class="accordion-header" id="headingThree">
+                                <button class="accordion-button collapsed bg-transparent text-primary fw-bold border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                    Is there a fee to use DreamSync?
+                                </button>
+                            </h2>
+                            <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body text-secondary">
+                                    DreamSync is free for individual planners looking to balance college, work, and personal studies.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-4 border-top border-color" style="background-color: var(--bg-secondary);">
+        <div class="container-xl d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+            <span class="text-secondary">&copy; 2026 DreamSync AI. All rights reserved.</span>
+            <div class="d-flex gap-4">
+                <a href="#features" class="text-secondary">Features</a>
+                <a href="#how-it-works" class="text-secondary">Methodology</a>
+                <a href="#faq" class="text-secondary">FAQ</a>
+            </div>
+        </div>
+    </footer>
+</div>
+{% endblock %}
